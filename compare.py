@@ -96,7 +96,7 @@ def main():
     report.append(['--', '--', '--', '--', '--'])
     report.append(['--', '--', '--', '--', '--'])
 
-    create_csv(report, f'{filename}.csv')
+    create_csv(report)
 
 
     previous_file.close()
@@ -178,9 +178,9 @@ def process_violations(report, previous_data, current_data):
         report.append(["", current_data[current_count]['policyId']])
         current_count = current_count + 1
 
-def create_csv(data, filename):
+def create_csv(data):
 
-    with open(f'./comparison_report.csv', "a") as value:
+    with open('./comparison_report.csv', "a") as value:
         report = csv.writer(value)
         for i in data:
             report.writerow(i)
