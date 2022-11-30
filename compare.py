@@ -6,10 +6,19 @@ import json
 def main():
 
     print(sys.argv)
-    stable_file = sys.argv[1]
-    dev_file = sys.argv[2]
+    try:
+        stable_file = sys.argv[1]
+        dev_file = sys.argv[2]
+    except:
+        print("Please enter two files for comparison.")
+        return
+        
 
-    filename = stable_file.split('/')[-1].split('.')[0]
+    try:
+        filename = stable_file.split('/')[-1].split('.')[0]
+    except:
+        print('Please enter a valid file')
+        return
     print(filename)
     previous_file = open(stable_file)
     current_file = open(dev_file)
@@ -84,8 +93,8 @@ def main():
     for row in process_path_analysis(previous_data, current_data, repo_name):
         report.append(row) 
 
-    report.append([])
-    report.append([])
+    report.append(['--', '--', '--', '--', '--'])
+    report.append(['--', '--', '--', '--', '--'])
 
     create_csv(report, f'{filename}.csv')
 
@@ -171,7 +180,7 @@ def process_violations(report, previous_data, current_data):
 
 def create_csv(data, filename):
 
-    with open(f'./{filename}', "w") as value:
+    with open(f'./comparison_report.csv', "a") as value:
         report = csv.writer(value)
         for i in data:
             report.writerow(i)
