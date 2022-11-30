@@ -93,6 +93,15 @@ def main():
     for row in process_path_analysis(previous_data, current_data, repo_name):
         report.append(row) 
 
+    report.append([])
+    report.append([])
+    report.append(["CPU Utilization Report"])
+    report.append([""])
+    cpu_utilization_data = open("./tools/results_1.txt", "r+")
+
+    for i in process_cpu_data(cpu_utilization_data.readlines()):
+        report.append(i)
+
     report.append(['--', '--', '--', '--', '--'])
     report.append(['--', '--', '--', '--', '--'])
 
@@ -341,6 +350,7 @@ def sub_process_path(source_stable, source_dev, value):
         sub_heading_list = []
         sub_title_list = []
         sub_result_list = []
+        counter = 1
 
         base_list = process_stable_data[i] if process_stable_data.__contains__(i) else []
         dev_list = process_dev_data[i] if process_dev_data.__contains__(i) else []
@@ -356,7 +366,7 @@ def sub_process_path(source_stable, source_dev, value):
             base_count = base_list[j] if j in base_list else "NA"
             dev_count = dev_list[j] if j in dev_list else "NA"
 
-            path_flow = "1 : " + str(i) + " -> " + str(j)
+            path_flow = str(counter) + " : " + str(i) + " -> " + str(j)
             complete_path = "DataFlow -> " + value + " -> " + str(i) + " -> " + str(j)
 
             sub_heading_list.append('\n'.join([path_flow, complete_path]))
@@ -371,6 +381,7 @@ def sub_process_path(source_stable, source_dev, value):
                 sub_result_list.append(f'{((dev_count - base_count) / base_count) * 100}%')
             except:
                 sub_result_list.append('0.00%')
+            counter = counter + 1
 
         final_result_list.append(sub_heading_list)
         final_result_list.append(sub_title_list)
@@ -379,8 +390,28 @@ def sub_process_path(source_stable, source_dev, value):
     
     return final_result_list
 
+def process_cpu_data(cpu_utilization_data):
 
+    final_result_list = []
 
+    for i in range(0, len(cpu_utilization_data)):
+        cpu_data = cpu_utilization_data[i].split(',')
+        value = []
+        for j in range(0, len(cpu_data)):
+            if j == 0:
+                v = cpu_data[j].split(':')
+                print(v[0])
+                print(v[1])
+                value.append(v[0])
+                value.append(v[1])
+            else:
+                value.append(cpu_data[j])
+        final_result_list.append(value)
+
+        if i%2 == 1:
+            final_result_list.append([])
+
+    return final_result_list
 
 if __name__ == "__main__":
     main()
