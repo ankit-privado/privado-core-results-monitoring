@@ -9,8 +9,9 @@ def main():
     try:
         stable_file = sys.argv[1]
         dev_file = sys.argv[2]
+        cpu_usage = sys.argv[3]
     except:
-        print("Please enter two files for comparison.")
+        print("Please enter two files for comparison and one for cpu usage")
         return
         
 
@@ -97,8 +98,9 @@ def main():
     report.append([])
     report.append(["CPU Utilization Report"])
     report.append([""])
-    cpu_utilization_data = open("./tools/results_1.txt", "r+")
+    cpu_utilization_data = open(cpu_usage, "r+")
 
+    report.append(["RepoName", filename])
     for i in process_cpu_data(cpu_utilization_data.readlines()):
         report.append(i)
 
