@@ -28,6 +28,7 @@ def main():
 
     previous_data = json.load(previous_file)
     current_data = json.load(current_file)
+    print(trigger_metadata_file)
     trigger_metadata_json = json.load(trigger_metadata_file)
     print(trigger_metadata_json)
 
