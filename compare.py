@@ -28,16 +28,15 @@ def main():
 
     previous_data = json.load(previous_file)
     current_data = json.load(current_file)
-    print(trigger_metadata_file)
-    trigger_metadata_json = json.load(trigger_metadata_file)
-    print(trigger_metadata_json)
+    trigger_metadata_str = trigger_metadata_file.read()
 
+    trigger_metadata_json = eval(trigger_metadata_str)
     report = []
     repo_name = previous_data['repoName']
     branch_name_stable = 'main'
-    branch_name_dev = trigger_metadata_json['pr_branch'] or ""
-    pr_id = '#' + str(trigger_metadata_json['prNumber']) or ""
-    commitID = trigger_metadata_json['commitID'] or ""
+    branch_name_dev = trigger_metadata_json['pr_branch'] or "--"
+    pr_id = ('#' + str(trigger_metadata_json['prNumber'])) or "--"
+    commitID = trigger_metadata_json['commitID'] or "--"
 
 
     report.append(['Base Version', '', '', '', 'Latest Version'])
@@ -125,6 +124,7 @@ def main():
 
     previous_file.close()
     current_file.close()
+    trigger_metadata_file.close()
 
 
 def top_level_collection_processor(collections_stable, collections_dev, repo_name):
