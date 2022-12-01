@@ -34,7 +34,7 @@ def main():
     report = []
     repo_name = previous_data['repoName']
     branch_name_stable = 'main'
-    branch_name_dev = trigger_metadata_json['pr_branch'] or "--"
+    branch_name_dev = trigger_metadata_json['pr_branch'] or trigger_metadata_json['push_branch'] or "--"
     pr_id = ('#' + str(trigger_metadata_json['prNumber'])) or "--"
     commitID = trigger_metadata_json['commitID'] or "--"
 
