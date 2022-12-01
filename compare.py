@@ -87,7 +87,8 @@ def main():
     report.append([])
     report.append(["Scan time analytics"])
     report.append(["RepoName", repo_name])
-    report.append(['Base version time', time_final_stable, '','', 'Latest version time', time_final_dev, '% change wrt base', percent_change_time])
+    report.append(['Base version time', '','','', 'Latest version time', '', '% change wrt base'])
+    report.append([time_final_stable, '','','', time_final_dev, '', percent_change_time])
 
 
     report.append([])
