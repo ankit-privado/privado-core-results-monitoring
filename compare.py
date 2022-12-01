@@ -10,8 +10,9 @@ def main():
         stable_file = sys.argv[1]
         dev_file = sys.argv[2]
         cpu_usage = sys.argv[3]
+        trigger_metadata = sys.argv[4]
     except:
-        print("Please enter two files for comparison and one for cpu usage")
+        print("Please enter two files for comparison, one for cpu usage and one for trigger_metadata")
         return
         
 
@@ -23,13 +24,19 @@ def main():
     print(filename)
     previous_file = open(stable_file)
     current_file = open(dev_file)
+    trigger_metadata_file = open(trigger_metadata)
 
     previous_data = json.load(previous_file)
     current_data = json.load(current_file)
+    print(type(trigger_metadata_file))
+    trigger_metadata_json = json.load(trigger_metadata_file)
 
     report = []
     repo_name = previous_data['repoName']
-
+    branch_name_stable = 'main'
+    branch_name_dev = trigger_metadata_json['pr_branch'] or ""
+    pr_id = '#' + str(trigger_metadata_json['prNumber']) or ""
+    commitID = trigger_metadata_json['commitID'] or ""
 
     report.append(['Base Version', '', '', '', 'Latest Version'])
     report.append(['privadoCoreVersion', previous_data['privadoCoreVersion'], '', '', 'privadoCoreVersion', current_data['privadoCoreVersion']])
@@ -37,6 +44,10 @@ def main():
     report.append(['privadoCLIVersion', previous_data['privadoCLIVersion'], '', '', 'privadoCLIVersion', current_data['privadoCLIVersion']])
 
     report.append(['privadoMainVersion', previous_data['privadoMainVersion'], '', '', 'privadoMainVersion', current_data['privadoMainVersion']])
+    report.append(['Branch Name', branch_name_stable, '', '', 'Branch Name', branch_name_dev])
+    report.append(['', '', '', '', 'PR Number',  pr_id])
+    report.append(['Commit ID', commitID])
+
 
 
     report.append([])
