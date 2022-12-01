@@ -1,7 +1,7 @@
 import csv 
 import sys
 import json
-
+import re
 
 def main():
 
@@ -30,8 +30,33 @@ def main():
     time_data_stable = open(stable_time)
     time_data_dev = open(dev_time)
 
-    print(time_data_stable.read())
-    print(time_data_dev.read())
+    # Comes with a newline at the start, so the second element
+    time_final_stable =  (time_data_stable.read().split('\n')[1]).split('\t')[1]
+    time_final_dev =  (time_data_dev.read().split('\n')[1]).split('\t')[1]
+
+
+
+    split_minutes_seconds_dev = re.split('[a-zA-Z]+', time_final_dev[:-1]) 
+    split_minutes_seconds_stable = re.split('[a-zA-Z]+', time_final_stable[:-1]) 
+
+    time_stable_minutes = 0
+    time_dev_minutes = 0
+    minutes_multiplier = 1/60
+    
+
+
+    for i in range(len(split_minutes_seconds_dev) - 1, -1, -1):
+        time_dev_minutes += (minutes_multiplier * float(split_minutes_seconds_dev[i]))
+        minutes_multiplier *= 60
+    
+    minutes_multiplier = 1/60
+    for i in range(len(split_minutes_seconds_stable) - 1, -1, -1):
+        time_stable_minutes += (minutes_multiplier * float(split_minutes_seconds_stable[i]))
+
+
+    # Percent change on the latest branch wrt base branch
+    percent_change_time = f'{round(((time_dev_minutes - time_stable_minutes) / time_stable_minutes), 2) * 100}%'
+
 
     previous_data = json.load(previous_file)
     current_data = json.load(current_file)
@@ -46,6 +71,10 @@ def main():
     commitID = trigger_metadata_json['commitID'] or "--"
 
 
+
+
+
+
     report.append(['Base Version', '', '', '', 'Latest Version'])
     report.append(['privadoCoreVersion', previous_data['privadoCoreVersion'], '', '', 'privadoCoreVersion', current_data['privadoCoreVersion']])
     
@@ -55,7 +84,10 @@ def main():
     report.append(['Branch Name', branch_name_stable, '', '', 'Branch Name', branch_name_dev])
     report.append(['', '', '', '', 'PR Number',  pr_id])
     report.append(['Commit ID', commitID])
-
+    report.append([])
+    report.append(["Scan time analytics"])
+    report.append(["RepoName", repo_name])
+    report.append(['Base version time', time_final_stable, '','', 'Latest version time', time_final_dev, '% change wrt base', percent_change_time])
 
 
     report.append([])
@@ -115,11 +147,22 @@ def main():
 
     report.append([])
     report.append([])
+    
+
+
+
+    
+
+    
+    report.append([])
+    report.append([])
+
+
     report.append(["CPU Utilization Report"])
     report.append([""])
     cpu_utilization_data = open(cpu_usage, "r+")
 
-    report.append(["RepoName", filename])
+    report.append(["RepoName", repo_name])
     for i in process_cpu_data(cpu_utilization_data.readlines()):
         report.append(i)
 
