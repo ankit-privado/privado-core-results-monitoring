@@ -11,8 +11,10 @@ def main():
         dev_file = sys.argv[2]
         cpu_usage = sys.argv[3]
         trigger_metadata = sys.argv[4]
+        stable_time = sys.argv[5]
+        dev_time = sys.argv[6]
     except:
-        print("Please enter two files for comparison, one for cpu usage and one for trigger_metadata")
+        print("Please enter two files for comparison, one for cpu usage, two for time required and one for trigger_metadata")
         return
         
 
@@ -25,6 +27,11 @@ def main():
     previous_file = open(stable_file)
     current_file = open(dev_file)
     trigger_metadata_file = open(trigger_metadata)
+    time_data_stable = open(stable_time)
+    time_data_dev = open(dev_time)
+
+    print(time_data_stable.read())
+    print(time_data_dev.read())
 
     previous_data = json.load(previous_file)
     current_data = json.load(current_file)
