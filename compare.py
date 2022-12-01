@@ -28,8 +28,8 @@ def main():
 
     previous_data = json.load(previous_file)
     current_data = json.load(current_file)
-    print(type(trigger_metadata_file))
     trigger_metadata_json = json.load(trigger_metadata_file)
+    print(trigger_metadata_json)
 
     report = []
     repo_name = previous_data['repoName']
@@ -37,6 +37,7 @@ def main():
     branch_name_dev = trigger_metadata_json['pr_branch'] or ""
     pr_id = '#' + str(trigger_metadata_json['prNumber']) or ""
     commitID = trigger_metadata_json['commitID'] or ""
+
 
     report.append(['Base Version', '', '', '', 'Latest Version'])
     report.append(['privadoCoreVersion', previous_data['privadoCoreVersion'], '', '', 'privadoCoreVersion', current_data['privadoCoreVersion']])
