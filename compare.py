@@ -159,7 +159,7 @@ def main():
     report.append([])
 
 
-    report.append(["CPU Utilization Report"])
+    report.append(["CPU and Memory Utilization Report"])
     report.append([""])
     cpu_utilization_data = open(cpu_usage, "r+")
 
@@ -463,6 +463,11 @@ def process_cpu_data(cpu_utilization_data):
     for i in range(0, len(cpu_utilization_data)):
         cpu_data = cpu_utilization_data[i].split(',')
         value = []
+
+        if i%2 == 0:
+            current_time = "+" + str(i) + " mins"
+            final_result_list.append([current_time])
+
         for j in range(0, len(cpu_data)):
             if j == 0:
                 v = cpu_data[j].split(':')
