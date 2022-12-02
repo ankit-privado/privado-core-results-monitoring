@@ -41,7 +41,7 @@ def main():
 
     time_stable_minutes = 0
     time_dev_minutes = 0
-    minutes_multiplier = (1/60)
+    minutes_multiplier = 1/60
     
 
 
