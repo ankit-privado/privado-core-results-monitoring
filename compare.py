@@ -181,6 +181,7 @@ def main():
 def top_level_collection_processor(collections_stable, collections_dev, repo_name):
     report = []
     for collection in list(zip(collections_stable, collections_dev)):
+        print(list(zip(collections_stable, collections_dev)))
         stable_c = collection[0]
         dev_c = collection[1]
         report.append(process_collection(stable_c, dev_c, repo_name,stable_c['name']))
@@ -190,8 +191,8 @@ def top_level_collection_processor(collections_stable, collections_dev, repo_nam
 
 def process_collection(collections_stable, collections_dev, repo_name, collection_name):
     collection_headings = ['repo_name', f'Number of Collections - {collection_name} ( Base ) ', f'Number of Collections - {collection_name} ( Latest )', 'List of  sourceId ( Base )', 'List of  sourceId ( Latest )', '% of change w.r.t base', 'New sourceIds added in Latest', 'Existing sourceIds removed from Latest']
-    stable_collections = len(collections_stable)
-    dev_collections = len(collections_dev)
+    stable_collections = len(collections_stable['collections'])
+    dev_collections = len(collections_dev['collections'])
 
     collections_sources_stable = []
     collections_sources_dev = []
@@ -207,7 +208,7 @@ def process_collection(collections_stable, collections_dev, repo_name, collectio
 
 
     try:
-        percent_change = f'{((collections_sources_dev - collections_sources_stable) / collections_sources_stable) * 100}%'  
+        percent_change = f'{((dev_collections - stable_collections) / stable_collections) * 100}%'  
     except:
         percent_change = '0.00%'
 
