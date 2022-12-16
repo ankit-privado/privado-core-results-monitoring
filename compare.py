@@ -43,10 +43,25 @@ def main():
 
     # Comes with a newline at the start, so the second element
     try:
-        time_final_stable = (time_data_stable.read().split('\n')[1])
-        time_final_dev = (time_data_dev.read().split('\n')[1])
+        time_final_stable = (time_data_stable.read().split('\n'))
+        time_final_dev = (time_data_dev.read().split('\n'))
     except:
         print()
+
+    
+    for time in time_final_stable:
+        if ("real" in time):
+            time_final_stable = time
+            break
+        
+    
+    for time in time_final_dev:
+        if ("real" in time):
+            time_final_dev = time
+            break
+        
+    time_final_dev = time_final_dev.split('\t')[1]
+    time_final_stable = time_final_stable.split('\t')[1]
 
 
     split_minutes_seconds_dev = re.split('[a-zA-Z]+', time_final_dev[:-1]) 
