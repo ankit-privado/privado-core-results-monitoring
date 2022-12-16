@@ -29,11 +29,24 @@ def main():
     trigger_metadata_file = open(trigger_metadata)
     time_data_stable = open(stable_time)
     time_data_dev = open(dev_time)
+    
+    # time_final_stable = []
+    # time_final_dev = []
+
+    # with open(stable_time) as file_in:
+    #     for line in file_in:
+    #         time_final_stable.append(line)
+    
+    # with open(dev_time) as file_in:
+    #     for line in file_in:
+    #         time_final_dev.append(line)
 
     # Comes with a newline at the start, so the second element
-    time_final_stable =  (time_data_stable.read().split('\n')[1]).split('\t')[1]
-    time_final_dev =  (time_data_dev.read().split('\n')[1]).split('\t')[1]
-
+    try:
+        time_final_stable = (time_data_stable.read().split('\n')[1])
+        time_final_dev = (time_data_dev.read().split('\n')[1])
+    except:
+        print()
 
 
     split_minutes_seconds_dev = re.split('[a-zA-Z]+', time_final_dev[:-1]) 
