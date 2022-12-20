@@ -93,8 +93,8 @@ def main():
     trigger_metadata_json = eval(trigger_metadata_str)
     report = []
     repo_name = previous_data['repoName']
-    branch_name_stable = 'main'
-    branch_name_dev = trigger_metadata_json['pr_branch'] or trigger_metadata_json['push_branch'] or "--"
+    branch_name_stable = trigger_metadata_json['base_branch']
+    branch_name_dev = trigger_metadata_json['head_branch']
     pr_id = ('#' + str(trigger_metadata_json['prNumber'])) or "--"
     commitID = trigger_metadata_json['commitID'] or "--"
 
