@@ -74,6 +74,8 @@ def main():
     repo_name = previous_data['repoName']
     branch_name_stable = trigger_metadata_json['pr_branch']
     branch_name_dev = trigger_metadata_json['push_branch']
+    print(branch_name_dev)
+    print(branch_name_stable)
     pr_id = ('#' + str(trigger_metadata_json['prNumber'])) or "--"
     commitID = trigger_metadata_json['commitID'] or "--"
 
