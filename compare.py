@@ -62,11 +62,11 @@ def main():
     trigger_metadata_str = trigger_metadata_file.read()
 
     summary_list.append("\n")
-    summary_list.append("Summary Report For: " + str(previous_data['repoName']))
+    summary_list.append(f"Summary Report For: {str(previous_data['repoName'])}")
     summary_list.append("\n")
-    summary_list.append("Change in time (w.r.t base branch): " + str(percent_change_time) + "\n")
-    summary_list.append("Base branch: " + str(time_stable_sec) + "\n")
-    summary_list.append("Head branch: " + str(time_dev_sec) + "\n")
+    summary_list.append(f"Change in time (w.r.t base branch): {str(percent_change_time)} \n")
+    summary_list.append(f"Base branch: {str(time_stable_sec)} \n")
+    summary_list.append(f"Head branch: {str(time_dev_sec)} \n")
     summary_list.append("\n")
 
     trigger_metadata_json = eval(trigger_metadata_str)
@@ -77,7 +77,7 @@ def main():
     pr_id = ('#' + str(trigger_metadata_json['prNumber'])) or "--"
     commitID = trigger_metadata_json['commitID'] or "--"
 
-    report.append(['Base Version', '', '', '', 'Latest Version'])
+    report.append(['Base Version', '', '', '', 'Head Version'])
     # No use when trigger by the github workflow
     # report.append(['privadoCoreVersion', previous_data['privadoCoreVersion'], '', '', 'privadoCoreVersion', current_data['privadoCoreVersion']])
     # report.append(['privadoCLIVersion', previous_data['privadoCLIVersion'], '', '', 'privadoCLIVersion', current_data['privadoCLIVersion']])
@@ -88,7 +88,7 @@ def main():
     report.append([])
     report.append(["Scan time analytics"])
     report.append(["RepoName", repo_name])
-    report.append(['Base version time', '','','', 'Latest version time', '', '% change wrt base'])
+    report.append(['Base version time', '','','', 'Head version time', '', '% change wrt base'])
     report.append([time_final_stable, '','','', time_final_dev, '', percent_change_time])
     report.append([])
     report.append([])
@@ -163,16 +163,14 @@ def main():
 def top_level_collection_processor(collections_stable, collections_dev, repo_name, summary_list):
     report = []
     for collection in list(zip(collections_stable, collections_dev)):
-        #print(list(zip(collections_stable, collections_dev)))
         stable_c = collection[0]
         dev_c = collection[1]
         report.append(process_collection(stable_c, dev_c, repo_name,stable_c['name'], summary_list))
 
     return report
 
-
 def process_collection(collections_stable, collections_dev, repo_name, collection_name, summary_list):
-    collection_headings = ['repo_name', f'Number of Collections - {collection_name} ( Base ) ', f'Number of Collections - {collection_name} ( Latest )', 'List of  sourceId ( Base )', 'List of  sourceId ( Latest )', '% of change w.r.t base', 'New sourceIds added in Latest', 'Existing sourceIds removed from Latest']
+    collection_headings = ['repo_name', f'Number of Collections - {collection_name} (Base) ', f'Number of Collections - {collection_name} (Head)', 'List of  sourceId ( Base )', 'List of  sourceId ( Head )', '% of change w.r.t base', 'New sourceIds added in Head', 'Existing sourceIds removed from Head']
     stable_collections = len(collections_stable['collections'])
     dev_collections = len(collections_dev['collections'])
 
@@ -187,9 +185,9 @@ def process_collection(collections_stable, collections_dev, repo_name, collectio
 
     try:
         percent_change = f'{((dev_collections - stable_collections) / stable_collections) * 100}%' 
-        summary_list.append("Change in Collection for " + collection_name + ": " + percent_change + "\n")
-        summary_list.append("Base Branch: " + str(len(collections_sources_stable)) + "\n")
-        summary_list.append("Head Branch: " + str(len(collections_sources_dev)) + "\n")
+        summary_list.append(f"Change in Collection for {collection_name}: {percent_change} \n")
+        summary_list.append(f"Base Branch: {str(len(collections_sources_stable))} \n")
+        summary_list.append(f"Head Branch: {str(len(collections_sources_dev))} \n")
     except:
         percent_change = '0.00%'
 
@@ -203,11 +201,11 @@ def process_collection(collections_stable, collections_dev, repo_name, collectio
     collections_sources_dev = '\n'.join(collections_sources_dev)
 
     if len(new_element) != 0:
-        summary_list.append("New Collection in " + collection_name + ": ")
+        summary_list.append(f"New Collection in {collection_name}: ")
         summary_list.append(', '.join(new_element))
         summary_list.append("\n")
     if len(removed_element) != 0:
-        summary_list.append("Missing Collection in " + collection_name + ": ")
+        summary_list.append(f"Missing Collection in {collection_name}: ")
         summary_list.append(', '.join(removed_element))
         summary_list.append("\n")
     summary_list.append("\n")
@@ -254,7 +252,7 @@ def create_csv(data):
 
 def process_new_sources(source_stable, source_dev, repo_name, summary_list):
 
-    source_headings = ['repo_name', 'Number of Sources ( Base )', 'Number of Sources ( Latest )', 'List of Sources ( Base )', 'List of Sources ( Latest )', '% of change w.r.t base', 'New Sources added in Latest', 'Existing Sources remvoed from Latest']
+    source_headings = ['repo_name', 'Number of Sources ( Base )', 'Number of Sources ( Head )', 'List of Sources ( Base )', 'List of Sources ( Head )', '% of change w.r.t base', 'New Sources added in Head', 'Existing Sources remvoed from Head']
     stable_sources = len(source_stable)
     dev_sources = len(source_dev)
 
@@ -270,9 +268,9 @@ def process_new_sources(source_stable, source_dev, repo_name, summary_list):
     new_latest = '\n'.join(new_element)
     removed_dev = '\n'.join(removed_element)
 
-    summary_list.append("Change in count of Source (w.r.t Base Branch): " + str(percent_change) + "\n")
-    summary_list.append("Base Branch: " + str(stable_sources) + "\n")
-    summary_list.append("Head Branch: " + str(dev_sources) + "\n")
+    summary_list.append(f"Change in count of Source (w.r.t Base Branch): {str(percent_change)} \n")
+    summary_list.append(f"Base Branch: {str(stable_sources)} \n")
+    summary_list.append(f"Head Branch: {str(dev_sources)} \n")
     
     if len(new_element) != 0:
         summary_list.append("New Source: ")
@@ -296,12 +294,12 @@ def process_sinks(stable_dataflows, dev_dataflows, repo_name, summary_list, key=
     headings = [ 
         'repo_name',
         f'Number of {key} sinks (base)',
-        f'Number of {key} sinks (latest)',
+        f'Number of {key} sinks (Head)',
         f'List of {key} Sinks (base)',
-        f'List of {key} Sinks ( Latest )',
+        f'List of {key} Sinks (Head)',
         '% of change w.r.t base',
-        f'New {key} Sinks added in Latest',
-        f'Existing {key} Sinks remvoed from Latest'
+        f'New {key} Sinks added in Head',
+        f'Existing {key} Sinks remvoed from Head'
     ]
     storages_stable = stable_dataflows[key]
     storages_dev = dev_dataflows[key]
@@ -329,15 +327,15 @@ def process_sinks(stable_dataflows, dev_dataflows, repo_name, summary_list, key=
     # percent change in latest sources wrt stable release
     try:
         percent_change = f'{round((((dev_sinks - stable_sinks) / stable_sinks) * 100),2)}%'
-        summary_list.append("Change in " + str(key) + ": " + str(percent_change) + "\n")  
-        summary_list.append("Base Branch: " + str(stable_sinks) + "\n")
-        summary_list.append("Head Branch: " + str(dev_sinks) + "\n")
+        summary_list.append(f"Change in {str(key)} : {str(percent_change)} \n")  
+        summary_list.append(f"Base Branch: {str(stable_sinks)} \n")
+        summary_list.append(f"Head Branch: {str(dev_sinks)} \n")
         if len(new_element) != 0:
-            summary_list.append("New " + str(key) + ": ")
+            summary_list.append(f"New {str(key)} : ")
             summary_list.append(", ".join(new_element))
             summary_list.append("\n")
         if len(removed_element) != 0:
-            summary_list.append("Removed " + str(key) + ": ")
+            summary_list.append(f"Removed {str(key)} : ")
             summary_list.append(", ".join(removed_element))
             summary_list.append("\n")
         summary_list.append("\n")
@@ -356,12 +354,12 @@ def process_leakages(stable_dataflows, dev_dataflows, repo_name, summary_list, k
     headings = [ 
         'repo_name',
         f'Number of {key} sinks (base)',
-        f'Number of {key} sinks (latest)',
+        f'Number of {key} sinks (Head)',
         f'List of {key} Sinks (base)',
-        f'List of {key} Sinks ( Latest )',
+        f'List of {key} Sinks (Head)',
         '% of change w.r.t base',
-        f'New {key} Sinks added in Latest',
-        f'Existing {key} Sinks remvoed from Latest'
+        f'New {key} Sinks added in Head',
+        f'Existing {key} Sinks remvoed from Head'
     ]
 
     stable_leakages = stable_dataflows[key]
@@ -380,9 +378,9 @@ def process_leakages(stable_dataflows, dev_dataflows, repo_name, summary_list, k
 
     try:
         percent_change = f'{round((((num_dev_leakages - num_stable_leakages) / num_stable_leakages) * 100),2)}%'
-        summary_list.append("Change in leakages: " + str(percent_change) + "\n")
-        summary_list.append("Base Branch: " + str(num_stable_leakages) + "\n")
-        summary_list.append("Head Branch: " + str(num_dev_leakages)  + "\n")
+        summary_list.append(f"Change in leakages: {str(percent_change)} \n")
+        summary_list.append(f"Base Branch: {str(num_stable_leakages)} \n")
+        summary_list.append(f"Head Branch: {str(num_dev_leakages)} \n")
         if len(new_element) != 0:
             summary_list.append("New leakage: ")
             summary_list.append(' '.join(new_element))
@@ -412,15 +410,15 @@ def process_path_analysis(source_stable, source_dev, repo_name, summary_list):
         for v in result[0]:
             path_value.append(v)
 
-        summary_list.append("Change in " + i + " path (w.r.t base): " + str(((result[2] - result[1])/result[1]) * 100) + "%" + "\n")
-        summary_list.append("Base Branch: " + str(result[1]) + "\n")
-        summary_list.append("Head Branch: " + str(result[2]) + "\n")
+        summary_list.append(f"Change in {i} path (w.r.t base): {str(((result[2] - result[1])/result[1]) * 100)} % \n")
+        summary_list.append(f"Base Branch: {str(result[1])} \n")
+        summary_list.append(f"Head Branch: {str(result[2])} \n")
         if len(result[3]) != 0:
-            summary_list.append("New " + i)
+            summary_list.append(f"New {i}")
             summary_list.append(', '.join(result[3]))
             summary_list.append("\n")
         if len(result[4]) != 0:
-            summary_list.append("Missing " + i)
+            summary_list.append(f"Missing {i}")
             summary_list.append(', '.join(result[4]))
             summary_list.append("\n")
         summary_list.append("\n")
@@ -480,8 +478,8 @@ def sub_process_path(source_stable, source_dev, value, summary_list):
             base_count = 0
             dev_count = 0
 
-            path_flow = str(counter) + " : " + str(i) + " -> " + str(j)
-            complete_path = "DataFlow -> " + value + " -> " + str(i) + " -> " + str(j)
+            path_flow = f"{str(counter)} : {str(i)} -> {str(j)}"
+            complete_path = f"DataFlow -> {value} -> {str(i)} -> {str(j)}"
 
             if j in base_list:
                 base_count = base_list[j]
@@ -501,7 +499,7 @@ def sub_process_path(source_stable, source_dev, value, summary_list):
             sub_heading_list.append("")
             sub_heading_list.append("")
             sub_title_list.append("Base (Path Count)")
-            sub_title_list.append("Latest (Path Count)")
+            sub_title_list.append("Head (Path Count)")
             sub_title_list.append("% Change")
             sub_result_list.append(base_count)
             sub_result_list.append(dev_count)
@@ -529,7 +527,7 @@ def process_cpu_data(cpu_utilization_data):
         value = []
 
         if i%2 == 0:
-            current_time = "+" + str(i) + " mins"
+            current_time = f"+ {str(i)} mins"
             final_result_list.append([current_time])
 
         for j in range(0, len(cpu_data)):
@@ -550,7 +548,6 @@ def create_summary(data):
     with open('./summary-report.txt', "a") as value:
         for i in data:
             value.write(i)
-
 
 if __name__ == "__main__":
     main()
