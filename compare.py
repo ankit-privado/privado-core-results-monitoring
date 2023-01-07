@@ -13,14 +13,14 @@ def main():
         trigger_metadata = sys.argv[4]
         stable_time = sys.argv[5]
         dev_time = sys.argv[6]
-    except:
-        print("Please enter two files for comparison, one for cpu usage, two for time required and one for trigger_metadata")
+    except Exception as e:
+        print("Please enter two files for comparison, one for cpu usage, two for time required and one for trigger_metadata", e)
         return
 
     try:
         filename = stable_file.split('/')[-1].split('.')[0]
-    except:
-        print('Please enter a valid file')
+    except Exception as e:
+        print('Please enter a valid file', e)
         return
     previous_file = open(stable_file)
     current_file = open(dev_file)
@@ -32,8 +32,8 @@ def main():
     try:
         time_final_stable = (time_data_stable.read().split('\n'))
         time_final_dev = (time_data_dev.read().split('\n'))
-    except:
-        print()
+    except Exception as e:
+        print("Error occurced during parsing time data", e)
 
     for time in time_final_stable:
         if ("real" in time):
@@ -188,7 +188,8 @@ def process_collection(collections_stable, collections_dev, repo_name, collectio
         summary_list.append(f"Change in Collection for {collection_name}: {percent_change} \n")
         summary_list.append(f"Base Branch: {str(len(collections_sources_stable))} \n")
         summary_list.append(f"Head Branch: {str(len(collections_sources_dev))} \n")
-    except:
+    except Exception as e:
+        print(e)
         percent_change = '0.00%'
 
     new_element = list(set(collections_sources_dev) - set(collections_sources_stable))
@@ -339,7 +340,8 @@ def process_sinks(stable_dataflows, dev_dataflows, repo_name, summary_list, key=
             summary_list.append(", ".join(removed_element))
             summary_list.append("\n")
         summary_list.append("\n")
-    except:
+    except Exception as e:
+        print(e)
         percent_change = '0.00%'
     new_latest = '\n'.join(set(sink_names_dev.split('\n')) - set(sink_names_stable.split('\n')))
     removed_dev = '\n'.join(list(set(sink_names_stable.split('\n')) - set(sink_names_dev.split('\n'))))
@@ -390,7 +392,8 @@ def process_leakages(stable_dataflows, dev_dataflows, repo_name, summary_list, k
             summary_list.append(' '.join(removed_element))
             summary_list.append()
         summary_list.append("\n")
-    except:
+    except Exception as e:
+        print(e)
         percent_change = '0.00%'
     
     result = [repo_name, num_stable_leakages, num_dev_leakages, leakage_names_stable, leakage_names_dev, percent_change, new_latest, removed_dev]
@@ -507,7 +510,8 @@ def sub_process_path(source_stable, source_dev, value, summary_list):
                 percentage_change = ((dev_count - base_count) / base_count) * 100
                 sub_result_list.append(f'{percentage_change}%')
                 total_per = total_per + percentage_change
-            except:
+            except Exception as e:
+                print(e)
                 sub_result_list.append('0.00%')
             counter = counter + 1
 
